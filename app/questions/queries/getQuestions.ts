@@ -1,10 +1,13 @@
 import { Ctx } from "blitz"
 import db, { FindManyQuestionArgs } from "db"
 
-type GetQuestionsInput = Pick<FindManyQuestionArgs, "where" | "orderBy" | "skip" | "take">
+type GetQuestionsInput = Pick<
+  FindManyQuestionArgs,
+  "where" | "orderBy" | "cursor" | "take" | "skip"
+>
 
 export default async function getQuestions(
-  { where, orderBy, skip = 0, take }: GetQuestionsInput,
+  { where, orderBy, cursor, take, skip }: GetQuestionsInput,
   ctx: Ctx
 ) {
   ctx.session.authorize()
@@ -12,8 +15,10 @@ export default async function getQuestions(
   const questions = await db.question.findMany({
     where,
     orderBy,
+    cursor,
     take,
     skip,
+    include: { choices: true },
   })
 
   const count = await db.question.count()
