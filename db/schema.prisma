@@ -43,3 +43,11 @@ model Project {
   updatedAt DateTime @updatedAt
   name      String   
 }
+
+model Question {
+  id        Int      @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  text      String   
+  choices   Choice[] 
+}
